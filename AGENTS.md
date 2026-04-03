@@ -86,3 +86,23 @@ Plugin Runtime automatically starts each installed plugin and interacts through 
     以破坏架构为耻，以遵循规范为荣。
     以假装理解为耻，以诚实无知为荣。
     以盲目修改为耻，以谨慎重构为荣。
+
+## Cursor Cloud specific instructions
+
+### Services overview
+
+| Service | Port | Start command |
+|---|---|---|
+| Backend (Quart) | 5300 | `uv run main.py` (from repo root) |
+| Frontend (Next.js dev) | 3000 | `pnpm dev` (from `web/`) |
+
+Both use SQLite (file `data/langbot.db`, auto-created) and embedded ChromaDB — no external databases needed.
+
+### Non-obvious caveats
+
+- The backend defaults to **websocket** plugin runtime mode and will log repeated `Failed to connect to plugin runtime` errors. These are harmless in local dev; the plugin runtime is a separate Docker service not needed for core functionality.
+- Frontend requires `web/.env` (copy from `web/.env.example`). It sets `NEXT_PUBLIC_API_BASE_URL=http://localhost:5300`.
+- On first launch the system is uninitialized. Create the admin account via `POST /api/v1/user/init` with JSON `{"user":"<email>","password":"<password>"}`, or use the web UI registration page at `http://localhost:3000/register`.
+- Backend lint: `uv run ruff check src/`; Frontend lint: `cd web && pnpm lint`. Both are also configured in `.pre-commit-config.yaml`.
+- Unit tests: `uv run pytest tests/unit_tests/ -v` (no external services required).
+- `uv` is installed via `pip install uv` (user-level). Ensure `$HOME/.local/bin` is on `PATH`.
