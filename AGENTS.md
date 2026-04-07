@@ -106,3 +106,12 @@ Both use SQLite (file `data/langbot.db`, auto-created) and embedded ChromaDB —
 - Backend lint: `uv run ruff check src/`; Frontend lint: `cd web && pnpm lint`. Both are also configured in `.pre-commit-config.yaml`.
 - Unit tests: `uv run pytest tests/unit_tests/ -v` (no external services required).
 - `uv` is installed via `pip install uv` (user-level). Ensure `$HOME/.local/bin` is on `PATH`.
+
+### Configuring model providers and bots
+
+- **Qwen (通义千问)**: Use requester `bailian-chat-completions` (label: 阿里云百炼). Default base URL: `https://dashscope.aliyuncs.com/compatible-mode/v1`. Requires a DashScope API Key (`DASHSCOPE_API_KEY` env var or entered in the UI). Model names follow Alibaba docs (e.g. `qwen-plus`, `qwen-turbo`, `qwen-max`).
+- **Model test API**: `POST /api/v1/provider/models/llm/<model_uuid>/test` with empty JSON body `{}`. Internally sends "Hello, world!" to the model and returns `{"code":0}` on success.
+- **WeCom (企业微信)**: Three adapter variants — `wecom` (internal app), `wecombot` (AI bot with WS/webhook), `wecomcs` (customer service). Platform adapter YAML schemas are at `src/langbot/pkg/platform/sources/wecom*.yaml`.
+- **Pipeline**: Must be created before a bot can route messages. A pipeline binds an AI runner (e.g. `local-agent`) to a model. Create via UI or `POST /api/v1/pipelines`.
+- **Bot creation flow**: Create model provider → add model → create pipeline (select model) → create bot (select platform adapter + pipeline) → enable bot.
+- The pipeline's built-in WebSocket chat (`/api/v1/pipelines/<uuid>/ws/connect`) requires the backend's internal WebSocket proxy bot to be initialized; it may not work out of the box in all dev environments.
