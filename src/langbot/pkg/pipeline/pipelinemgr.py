@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import typing
 import traceback
+import json
 
 import sqlalchemy
 
@@ -116,6 +117,15 @@ class RuntimePipeline:
         # Store bound plugins and MCP servers in query for filtering
         query.variables['_pipeline_bound_plugins'] = self.bound_plugins
         query.variables['_pipeline_bound_mcp_servers'] = self.bound_mcp_servers
+        customer_profile_extraction_config = (
+            self.pipeline_entity.config.get('ai', {})
+            .get('local-agent', {})
+            .get('customer-profile-extraction', {})
+        )
+        query.variables['_customer_profile_extraction_enabled'] = (
+            isinstance(customer_profile_extraction_config, dict)
+            and customer_profile_extraction_config.get('enabled', False) is True
+        )
 
         # Record query start for monitoring
         try:
@@ -297,6 +307,27 @@ class RuntimePipeline:
             )
             # Store message_id in query variables for LLM call monitoring
             query.variables['_monitoring_message_id'] = message_id
+            query.variables['_customer_message_id'] = message_id
+
+            # Record user-side message to customer timeline
+            if hasattr(query, 'message_chain') and hasattr(query.message_chain, 'model_dump'):
+                customer_message_content = json.dumps(query.message_chain.model_dump(), ensure_ascii=False)
+            else:
+                customer_message_content = str(query)
+
+            await monitoring_helper.MonitoringHelper.record_customer_conversation(
+                ap=self.ap,
+                query=query,
+                bot_id=query.bot_uuid or 'unknown',
+                bot_name=bot_name,
+                pipeline_id=self.pipeline_entity.uuid,
+                pipeline_name=pipeline_name,
+                role='user',
+                message_content=customer_message_content,
+                message_id=message_id,
+                runner_name=runner_name,
+                trigger_extraction=False,
+            )
         except Exception as e:
             self.ap.logger.error(f'Failed to record query start: {e}')
 
@@ -353,6 +384,45 @@ class RuntimePipeline:
                     )
                 except Exception as e:
                     self.ap.logger.error(f'Failed to record query response: {e}')
+
+                # Record assistant-side message to customer timeline
+                try:
+                    assistant_message_content = ''
+                    if hasattr(query, 'resp_message_chain') and query.resp_message_chain:
+                        last_resp = query.resp_message_chain[-1]
+                        if hasattr(last_resp, 'model_dump'):
+                            assistant_message_content = json.dumps(last_resp.model_dump(), ensure_ascii=False)
+                        else:
+                            assistant_message_content = str(last_resp)
+                    elif hasattr(query, 'resp_messages') and query.resp_messages:
+                        last_resp = query.resp_messages[-1]
+                        if hasattr(last_resp, 'get_content_platform_message_chain'):
+                            chain = last_resp.get_content_platform_message_chain()
+                            if hasattr(chain, 'model_dump'):
+                                assistant_message_content = json.dumps(chain.model_dump(), ensure_ascii=False)
+                            else:
+                                assistant_message_content = str(chain)
+                        else:
+                            assistant_message_content = str(last_resp)
+
+                    if assistant_message_content:
+                        await monitoring_helper.MonitoringHelper.record_customer_conversation(
+                            ap=self.ap,
+                            query=query,
+                            bot_id=query.bot_uuid or 'unknown',
+                            bot_name=bot_name,
+                            pipeline_id=self.pipeline_entity.uuid,
+                            pipeline_name=pipeline_name,
+                            role='assistant',
+                            message_content=assistant_message_content,
+                            message_id=query.variables.get('_monitoring_message_id'),
+                            runner_name=runner_name,
+                            trigger_extraction=bool(
+                                query.variables.get('_customer_profile_extraction_enabled', False)
+                            ),
+                        )
+                except Exception as e:
+                    self.ap.logger.error(f'Failed to record customer assistant response: {e}')
 
         except Exception as e:
             inst_name = query.current_stage_name if query.current_stage_name else 'unknown'

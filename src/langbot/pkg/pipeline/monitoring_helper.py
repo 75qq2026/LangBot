@@ -190,6 +190,39 @@ class MonitoringHelper:
             ap.logger.error(f'Failed to record query response: {e}')
 
     @staticmethod
+    async def record_customer_conversation(
+        ap: app.Application,
+        query: pipeline_query.Query,
+        bot_id: str,
+        bot_name: str,
+        pipeline_id: str,
+        pipeline_name: str,
+        role: str,
+        message_content: str,
+        message_id: str | None = None,
+        runner_name: str | None = None,
+        trigger_extraction: bool = False,
+    ) -> None:
+        """Record conversation event to customer management module."""
+        try:
+            if not hasattr(ap, 'customer_service') or ap.customer_service is None:
+                return
+            await ap.customer_service.ingest_conversation(
+                query=query,
+                bot_id=bot_id,
+                bot_name=bot_name,
+                pipeline_id=pipeline_id,
+                pipeline_name=pipeline_name,
+                role=role,
+                message_content=message_content,
+                message_id=message_id,
+                runner_name=runner_name,
+                trigger_extraction=trigger_extraction,
+            )
+        except Exception as e:
+            ap.logger.error(f'Failed to record customer conversation: {e}')
+
+    @staticmethod
     async def record_query_error(
         ap: app.Application,
         query: pipeline_query.Query,
