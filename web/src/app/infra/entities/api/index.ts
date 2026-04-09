@@ -90,6 +90,24 @@ export interface ApiRespPipelines {
   pipelines: Pipeline[];
 }
 
+export interface ApiRespCustomers {
+  customers: Customer[];
+  total: number;
+  limit: number;
+  offset: number;
+}
+
+export interface ApiRespCustomer {
+  customer: Customer;
+}
+
+export interface ApiRespCustomerConversations {
+  conversations: CustomerConversation[];
+  total: number;
+  limit: number;
+  offset: number;
+}
+
 export interface Pipeline {
   uuid?: string;
   name: string;
@@ -101,6 +119,53 @@ export interface Pipeline {
   created_at?: string;
   updated_at?: string;
   emoji?: string;
+}
+
+export interface Customer {
+  id: string;
+  customer_key: string;
+  session_id?: string | null;
+  platform?: string | null;
+  bot_id?: string | null;
+  bot_name?: string | null;
+  pipeline_id?: string | null;
+  pipeline_name?: string | null;
+  user_id?: string | null;
+  user_name?: string | null;
+  name?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  company?: string | null;
+  requirements?: string | null;
+  notes?: string | null;
+  tags?: string[] | null;
+  profile_data?: Record<string, unknown> | null;
+  latest_summary?: string | null;
+  conversation_count: number;
+  first_contact_at: string;
+  last_contact_at: string;
+  last_extracted_at?: string | null;
+  created_at?: string;
+  updated_at?: string;
+  display_name?: string;
+}
+
+export interface CustomerConversation {
+  id: string;
+  customer_id: string;
+  session_id?: string | null;
+  platform?: string | null;
+  bot_id?: string | null;
+  bot_name?: string | null;
+  pipeline_id?: string | null;
+  pipeline_name?: string | null;
+  user_id?: string | null;
+  user_name?: string | null;
+  role: string;
+  content_text: string;
+  raw_message_content?: string | null;
+  extracted_payload?: Record<string, unknown> | null;
+  created_at: string;
 }
 
 export interface ApiRespPlatformAdapters {

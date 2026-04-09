@@ -52,6 +52,27 @@ export const sidebarConfigList = [
     section: 'home',
   }),
   new SidebarChildVO({
+    id: 'customers',
+    name: t('customers.title'),
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className="text-blue-500"
+      >
+        <path d="M8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7ZM4 19C4 15.6863 6.68629 13 10 13H14C17.3137 13 20 15.6863 20 19V20H4V19ZM19 8H22V10H19V13H17V10H14V8H17V5H19V8Z"></path>
+      </svg>
+    ),
+    route: '/home/customers',
+    description: t('customers.description'),
+    helpLink: {
+      en_US: '',
+      zh_Hans: '',
+    },
+    section: 'home',
+  }),
+  new SidebarChildVO({
     id: 'bots',
     name: t('bots.title'),
     icon: (

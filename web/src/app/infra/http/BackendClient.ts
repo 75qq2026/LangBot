@@ -7,6 +7,9 @@ import {
   LLMModel,
   ApiRespPipelines,
   Pipeline,
+  ApiRespCustomers,
+  ApiRespCustomer,
+  ApiRespCustomerConversations,
   ApiRespPlatformAdapters,
   ApiRespPlatformAdapter,
   ApiRespPlatformBots,
@@ -234,6 +237,77 @@ export class BackendClient extends BaseHttpClient {
       enable_all_plugins,
       enable_all_mcp_servers,
     });
+  }
+
+  // ============ Customer API ============
+  public getCustomers(params?: {
+    keyword?: string;
+    botId?: string[];
+    pipelineId?: string[];
+    limit?: number;
+    offset?: number;
+  }): Promise<ApiRespCustomers> {
+    const queryParams = new URLSearchParams();
+    if (params?.keyword) {
+      queryParams.append('keyword', params.keyword);
+    }
+    if (params?.botId) {
+      params.botId.forEach((id) => queryParams.append('botId', id));
+    }
+    if (params?.pipelineId) {
+      params.pipelineId.forEach((id) => queryParams.append('pipelineId', id));
+    }
+    if (params?.limit !== undefined) {
+      queryParams.append('limit', params.limit.toString());
+    }
+    if (params?.offset !== undefined) {
+      queryParams.append('offset', params.offset.toString());
+    }
+    const qs = queryParams.toString();
+    return this.get(`/api/v1/customers${qs ? `?${qs}` : ''}`);
+  }
+
+  public getCustomer(customerId: string): Promise<ApiRespCustomer> {
+    return this.get(`/api/v1/customers/${customerId}`);
+  }
+
+  public getCustomerConversations(
+    customerId: string,
+    params?: {
+      limit?: number;
+      offset?: number;
+    },
+  ): Promise<ApiRespCustomerConversations> {
+    const queryParams = new URLSearchParams();
+    if (params?.limit !== undefined) {
+      queryParams.append('limit', params.limit.toString());
+    }
+    if (params?.offset !== undefined) {
+      queryParams.append('offset', params.offset.toString());
+    }
+    const qs = queryParams.toString();
+    return this.get(
+      `/api/v1/customers/${customerId}/conversations${qs ? `?${qs}` : ''}`,
+    );
+  }
+
+  public exportCustomers(params?: {
+    keyword?: string;
+    botId?: string[];
+    pipelineId?: string[];
+  }) {
+    const queryParams = new URLSearchParams();
+    if (params?.keyword) {
+      queryParams.append('keyword', params.keyword);
+    }
+    if (params?.botId) {
+      params.botId.forEach((id) => queryParams.append('botId', id));
+    }
+    if (params?.pipelineId) {
+      params.pipelineId.forEach((id) => queryParams.append('pipelineId', id));
+    }
+    const qs = queryParams.toString();
+    return this.downloadFile(`/api/v1/customers/export${qs ? `?${qs}` : ''}`);
   }
 
   // ============ WebSocket Chat API ============

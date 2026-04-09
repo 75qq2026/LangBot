@@ -93,6 +93,19 @@ class MonitoringHelper:
                     user_name=sender_name,
                 )
 
+            if getattr(ap, 'customer_service', None) is not None:
+                customer_id = await ap.customer_service.record_conversation(
+                    query=query,
+                    bot_id=bot_id,
+                    bot_name=bot_name,
+                    pipeline_id=pipeline_id,
+                    pipeline_name=pipeline_name,
+                    role='user',
+                    message_content=message_content,
+                    user_name=sender_name,
+                )
+                query.variables['_customer_id'] = customer_id
+
             return message_id
         except Exception as e:
             ap.logger.error(f'Failed to record query start: {e}')
@@ -186,6 +199,34 @@ class MonitoringHelper:
                 runner_name=runner_name,
                 role='assistant',
             )
+
+            if getattr(ap, 'customer_service', None) is not None:
+                customer_id = query.variables.get('_customer_id')
+                if not customer_id:
+                    customer_id = await ap.customer_service.record_conversation(
+                        query=query,
+                        bot_id=bot_id,
+                        bot_name=bot_name,
+                        pipeline_id=pipeline_id,
+                        pipeline_name=pipeline_name,
+                        role='assistant',
+                        message_content=message_content,
+                        user_name=sender_name,
+                    )
+                    query.variables['_customer_id'] = customer_id
+                else:
+                    await ap.customer_service.record_conversation(
+                        query=query,
+                        bot_id=bot_id,
+                        bot_name=bot_name,
+                        pipeline_id=pipeline_id,
+                        pipeline_name=pipeline_name,
+                        role='assistant',
+                        message_content=message_content,
+                        user_name=sender_name,
+                    )
+
+                await ap.customer_service.extract_customer_profile(customer_id=customer_id, query=query)
         except Exception as e:
             ap.logger.error(f'Failed to record query response: {e}')
 
