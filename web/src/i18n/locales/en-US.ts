@@ -1180,14 +1180,16 @@ const enUS = {
     listTitle: 'Customer list',
     detailTitle: 'Customer details',
     timelineTitle: 'Conversation timeline',
-    timelineDescription: 'Review the complete timeline of recent customer conversations',
+    timelineDescription:
+      'Review the complete timeline of recent customer conversations',
     overviewTitle: 'Profile overview',
     basicInfo: 'Basic info',
     extractedInfo: 'Structured info',
     noSelection: 'Select a customer from the list to view details.',
     noTimeline: 'No conversation records yet',
     emptyList: 'No matching customers found',
-    emptyDetailHint: 'Select a customer from the list to view profile and conversation details.',
+    emptyDetailHint:
+      'Select a customer from the list to view profile and conversation details.',
     noSummary: 'No summary has been generated yet.',
     emptyTimeline: 'This customer does not have any conversation records yet.',
     unknownName: 'Unnamed customer',

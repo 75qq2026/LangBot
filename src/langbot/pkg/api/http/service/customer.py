@@ -311,6 +311,8 @@ class CustomerService:
 
             if extracted_profile:
                 for key, value in extracted_profile.items():
+                    if key in {'name', 'phone', 'email', 'company', 'requirements', 'notes', 'summary', 'tags'}:
+                        continue
                     if value not in (None, '', [], {}):
                         profile_data[key] = value
 

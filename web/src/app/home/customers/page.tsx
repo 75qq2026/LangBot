@@ -15,10 +15,7 @@ import {
 } from 'lucide-react';
 
 import { httpClient } from '@/app/infra/http/HttpClient';
-import type {
-  Customer,
-  CustomerConversation,
-} from '@/app/infra/entities/api';
+import type { Customer, CustomerConversation } from '@/app/infra/entities/api';
 import { useSidebarData } from '@/app/home/components/home-sidebar/SidebarDataContext';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -84,7 +81,9 @@ export default function CustomersPage() {
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [customerDetail, setCustomerDetail] = useState<Customer | null>(null);
-  const [conversations, setConversations] = useState<CustomerConversation[]>([]);
+  const [conversations, setConversations] = useState<CustomerConversation[]>(
+    [],
+  );
 
   const fetchCustomers = useCallback(async () => {
     setLoadingList(true);
@@ -185,8 +184,7 @@ export default function CustomersPage() {
         keyword: appliedKeyword || undefined,
       });
       const blob = new Blob([response.data], {
-        type:
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       });
       const url = window.URL.createObjectURL(blob);
       const anchor = document.createElement('a');
@@ -337,7 +335,9 @@ export default function CustomersPage() {
                         <UserRound className="h-4 w-4" />
                         {t('customers.fields.name')}
                       </div>
-                      <div className="font-medium">{customerDetail.name || '--'}</div>
+                      <div className="font-medium">
+                        {customerDetail.name || '--'}
+                      </div>
                     </div>
                     <div className="space-y-1">
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -407,7 +407,9 @@ export default function CustomersPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <h3 className="font-medium">{t('customers.fields.tags')}</h3>
+                    <h3 className="font-medium">
+                      {t('customers.fields.tags')}
+                    </h3>
                     <div className="flex flex-wrap gap-2">
                       {customerDetail.tags && customerDetail.tags.length > 0 ? (
                         customerDetail.tags.map((tag) => (
@@ -416,7 +418,9 @@ export default function CustomersPage() {
                           </Badge>
                         ))
                       ) : (
-                        <span className="text-sm text-muted-foreground">--</span>
+                        <span className="text-sm text-muted-foreground">
+                          --
+                        </span>
                       )}
                     </div>
                   </div>
@@ -432,7 +436,9 @@ export default function CustomersPage() {
           <Card className="min-h-0 flex-1">
             <CardHeader>
               <CardTitle>{t('customers.timelineTitle')}</CardTitle>
-              <CardDescription>{t('customers.timelineDescription')}</CardDescription>
+              <CardDescription>
+                {t('customers.timelineDescription')}
+              </CardDescription>
             </CardHeader>
             <CardContent className="min-h-0">
               <ScrollArea className="h-[calc(100vh-30rem)] pr-4">
@@ -449,7 +455,9 @@ export default function CustomersPage() {
                           key={conversation.id}
                           className={cn(
                             'rounded-lg border p-4',
-                            isUser ? 'border-blue-200 bg-blue-50/50' : 'bg-card',
+                            isUser
+                              ? 'border-blue-200 bg-blue-50/50'
+                              : 'bg-card',
                           )}
                         >
                           <div className="mb-2 flex flex-wrap items-center gap-2">
