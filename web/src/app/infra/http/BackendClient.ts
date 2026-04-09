@@ -41,6 +41,8 @@ import {
   ApiRespKnowledgeEngines,
   ApiRespParsers,
   RagMigrationStatusResp,
+  Customer,
+  CustomerConversation,
 } from '@/app/infra/entities/api';
 import { Plugin } from '@/app/infra/entities/plugin';
 import { GetBotLogsRequest } from '@/app/infra/http/requestParam/bots/GetBotLogsRequest';
@@ -397,6 +399,74 @@ export class BackendClient extends BaseHttpClient {
     queryParams.append('limit', limit.toString());
     queryParams.append('offset', offset.toString());
     return this.get(`/api/v1/monitoring/messages?${queryParams.toString()}`);
+  }
+
+  // ============ Customer API ============
+  public getCustomers(params?: {
+    keyword?: string;
+    botId?: string[];
+    pipelineId?: string[];
+    limit?: number;
+    offset?: number;
+  }): Promise<{
+    customers: Customer[];
+    total: number;
+    limit: number;
+    offset: number;
+  }> {
+    const queryParams = new URLSearchParams();
+    if (params?.keyword) {
+      queryParams.append('keyword', params.keyword);
+    }
+    if (params?.botId) {
+      params.botId.forEach((id) => queryParams.append('botId', id));
+    }
+    if (params?.pipelineId) {
+      params.pipelineId.forEach((id) => queryParams.append('pipelineId', id));
+    }
+    if (params?.limit !== undefined) {
+      queryParams.append('limit', params.limit.toString());
+    }
+    if (params?.offset !== undefined) {
+      queryParams.append('offset', params.offset.toString());
+    }
+
+    const queryString = queryParams.toString();
+    return this.get(`/api/v1/customers${queryString ? `?${queryString}` : ''}`);
+  }
+
+  public getCustomer(customerId: string): Promise<{
+    found: boolean;
+    customer: Customer;
+  }> {
+    return this.get(`/api/v1/customers/${customerId}`);
+  }
+
+  public getCustomerConversations(
+    customerId: string,
+    params?: {
+      limit?: number;
+      offset?: number;
+    },
+  ): Promise<{
+    customer_id: string;
+    conversations: CustomerConversation[];
+    total: number;
+    limit: number;
+    offset: number;
+  }> {
+    const queryParams = new URLSearchParams();
+    if (params?.limit !== undefined) {
+      queryParams.append('limit', params.limit.toString());
+    }
+    if (params?.offset !== undefined) {
+      queryParams.append('offset', params.offset.toString());
+    }
+
+    const queryString = queryParams.toString();
+    return this.get(
+      `/api/v1/customers/${customerId}/conversations${queryString ? `?${queryString}` : ''}`,
+    );
   }
 
   // ============ File management API ============
@@ -1022,6 +1092,78 @@ export class BackendClient extends BaseHttpClient {
     }
 
     return this.get(`/api/v1/monitoring/overview?${queryParams.toString()}`);
+  }
+
+  // ============ Customer API ============
+  public getCustomers(params?: {
+    keyword?: string;
+    botId?: string[];
+    pipelineId?: string[];
+    limit?: number;
+    offset?: number;
+  }): Promise<{
+    customers: Customer[];
+    total: number;
+    limit: number;
+    offset: number;
+  }> {
+    const queryParams = new URLSearchParams();
+    if (params?.keyword) {
+      queryParams.append('keyword', params.keyword);
+    }
+    if (params?.botId) {
+      params.botId.forEach((id) => queryParams.append('botId', id));
+    }
+    if (params?.pipelineId) {
+      params.pipelineId.forEach((id) => queryParams.append('pipelineId', id));
+    }
+    if (params?.limit != null) {
+      queryParams.append('limit', params.limit.toString());
+    }
+    if (params?.offset != null) {
+      queryParams.append('offset', params.offset.toString());
+    }
+
+    const queryString = queryParams.toString();
+    return this.get(
+      `/api/v1/customers${queryString ? `?${queryString}` : ''}`,
+    );
+  }
+
+  public getCustomer(customerId: string): Promise<{
+    found: boolean;
+    customer: Customer;
+  }> {
+    return this.get(`/api/v1/customers/${customerId}`);
+  }
+
+  public getCustomerConversations(
+    customerId: string,
+    params?: {
+      limit?: number;
+      offset?: number;
+    },
+  ): Promise<{
+    customer_id: string;
+    conversations: CustomerConversation[];
+    total: number;
+    limit: number;
+    offset: number;
+  }> {
+    const queryParams = new URLSearchParams();
+    if (params?.limit != null) {
+      queryParams.append('limit', params.limit.toString());
+    }
+    if (params?.offset != null) {
+      queryParams.append('offset', params.offset.toString());
+    }
+
+    const queryString = queryParams.toString();
+    return this.get(
+      `/api/v1/customers/${customerId}/conversations${
+        queryString ? `?${queryString}` : ''
+      }`,
+    );
   }
 
   // ============ Survey API ============

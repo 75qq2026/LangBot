@@ -145,6 +145,71 @@ export interface Bot {
   adapter_runtime_values?: object;
 }
 
+export interface CustomerProfile {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  last_contact_at: string;
+  bot_id: string;
+  bot_name: string;
+  pipeline_id: string;
+  pipeline_name: string;
+  session_id: string;
+  platform?: string | null;
+  user_id: string;
+  user_name?: string | null;
+  customer_name?: string | null;
+  phone?: string | null;
+  company?: string | null;
+  requirement_summary?: string | null;
+  notes?: string | null;
+  intent?: string | null;
+  tags?: string[];
+  profile_status: string;
+  profile_data?: Record<string, unknown>;
+  source_runner?: string | null;
+  extraction_model?: string | null;
+  conversation_count: number;
+}
+
+export interface CustomerConversation {
+  id: string;
+  customer_id: string;
+  timestamp: string;
+  bot_id: string;
+  bot_name: string;
+  pipeline_id: string;
+  pipeline_name: string;
+  session_id: string;
+  platform?: string | null;
+  user_id: string;
+  user_name?: string | null;
+  role: string;
+  message_content: string;
+  message_text?: string | null;
+  monitoring_message_id?: string | null;
+}
+
+export interface ApiRespCustomers {
+  customers: CustomerProfile[];
+  total: number;
+  limit: number;
+  offset: number;
+}
+
+export interface ApiRespCustomer {
+  found: boolean;
+  customer: CustomerProfile;
+}
+
+export interface ApiRespCustomerConversations {
+  customer_id: string;
+  conversations: CustomerConversation[];
+  total: number;
+  limit: number;
+  offset: number;
+}
+
 export interface ApiRespKnowledgeBases {
   bases: KnowledgeBase[];
 }

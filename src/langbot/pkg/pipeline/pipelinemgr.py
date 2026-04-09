@@ -354,6 +354,19 @@ class RuntimePipeline:
                 except Exception as e:
                     self.ap.logger.error(f'Failed to record query response: {e}')
 
+                try:
+                    await self.ap.customer_service.record_pipeline_interaction(
+                        query=query,
+                        bot_id=query.bot_uuid or 'unknown',
+                        bot_name=bot_name,
+                        pipeline_id=self.pipeline_entity.uuid,
+                        pipeline_name=pipeline_name,
+                        runner_name=runner_name,
+                        user_monitoring_message_id=message_id,
+                    )
+                except Exception as e:
+                    self.ap.logger.error(f'Failed to record customer interaction: {e}')
+
         except Exception as e:
             inst_name = query.current_stage_name if query.current_stage_name else 'unknown'
             self.ap.logger.error(f'Error processing query {query.query_id} stage={inst_name} : {e}')

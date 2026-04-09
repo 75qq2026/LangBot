@@ -202,4 +202,10 @@ class PreProcessor(stage.PipelineStage):
         query.prompt.messages = event_ctx.event.default_prompt
         query.messages = event_ctx.event.prompt
 
+        if getattr(self.ap, 'customer_service', None):
+            try:
+                await self.ap.customer_service.append_customer_collection_prompt(query)
+            except Exception as e:
+                self.ap.logger.warning(f'Failed to append customer collection prompt: {e}')
+
         return entities.StageProcessResult(result_type=entities.ResultType.CONTINUE, new_query=query)
