@@ -86,3 +86,35 @@ Plugin Runtime automatically starts each installed plugin and interacts through 
     以破坏架构为耻，以遵循规范为荣。
     以假装理解为耻，以诚实无知为荣。
     以盲目修改为耻，以谨慎重构为荣。
+
+## Cursor Cloud specific instructions
+
+### Services overview
+
+| Service | Port | Command | Notes |
+|---------|------|---------|-------|
+| Backend (Quart) | 5300 | `uv run main.py` | Runs from repo root. Uses SQLite + ChromaDB (both embedded, zero-config). |
+| Frontend (Next.js) | 3000 | `cd web && pnpm dev` | Requires `web/.env` (copy from `.env.example`). Proxies API to backend. |
+
+### Running services
+
+- **Backend**: `uv run main.py` from repo root. First launch auto-generates `data/config.yaml` and SQLite DB at `data/langbot.db`.
+- **Frontend**: `cd web && pnpm dev` — starts the Turbopack dev server on port 3000.
+- The Plugin Runtime connection error (`Failed to connect to plugin runtime`) on backend startup is expected in dev mode; the plugin system uses `stdio` mode locally and the WebSocket endpoint (`langbot_plugin_runtime:5400`) is only relevant inside Docker.
+
+### First-time initialization
+
+A fresh instance has no user account. The system must be initialized via `POST /api/v1/user/init` with `{"user":"<email>","password":"<password>"}` (or through the register page at `/register`). After that, log in at `/login`.
+
+### Lint, test, and format commands
+
+See the README "Backend Development" / "Frontend Development" sections. Quick reference:
+- **Backend lint**: `uv run ruff check src` and `uv run ruff format src --check`
+- **Backend tests**: `bash run_tests.sh` or `uv run pytest tests/unit_tests/ -v`
+- **Frontend lint**: `cd web && pnpm lint`
+
+### Gotchas
+
+- `uv` is installed via `pip install uv` and lives in `~/.local/bin`; ensure `PATH` includes that directory.
+- The `web/.env` file must exist before `pnpm dev` will work correctly — copy it from `web/.env.example`.
+- `pnpm` version in `package.json` `packageManager` field is `8.9.2`, but a newer system pnpm works fine for development.
