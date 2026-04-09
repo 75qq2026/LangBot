@@ -145,7 +145,7 @@ export interface Bot {
   adapter_runtime_values?: object;
 }
 
-export interface CustomerProfile {
+export interface Customer {
   id: string;
   created_at: string;
   updated_at: string;
@@ -191,7 +191,7 @@ export interface CustomerConversation {
 }
 
 export interface ApiRespCustomers {
-  customers: CustomerProfile[];
+  customers: Customer[];
   total: number;
   limit: number;
   offset: number;
@@ -199,7 +199,7 @@ export interface ApiRespCustomers {
 
 export interface ApiRespCustomer {
   found: boolean;
-  customer: CustomerProfile;
+  customer: Customer;
 }
 
 export interface ApiRespCustomerConversations {

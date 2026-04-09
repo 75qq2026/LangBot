@@ -401,74 +401,6 @@ export class BackendClient extends BaseHttpClient {
     return this.get(`/api/v1/monitoring/messages?${queryParams.toString()}`);
   }
 
-  // ============ Customer API ============
-  public getCustomers(params?: {
-    keyword?: string;
-    botId?: string[];
-    pipelineId?: string[];
-    limit?: number;
-    offset?: number;
-  }): Promise<{
-    customers: Customer[];
-    total: number;
-    limit: number;
-    offset: number;
-  }> {
-    const queryParams = new URLSearchParams();
-    if (params?.keyword) {
-      queryParams.append('keyword', params.keyword);
-    }
-    if (params?.botId) {
-      params.botId.forEach((id) => queryParams.append('botId', id));
-    }
-    if (params?.pipelineId) {
-      params.pipelineId.forEach((id) => queryParams.append('pipelineId', id));
-    }
-    if (params?.limit !== undefined) {
-      queryParams.append('limit', params.limit.toString());
-    }
-    if (params?.offset !== undefined) {
-      queryParams.append('offset', params.offset.toString());
-    }
-
-    const queryString = queryParams.toString();
-    return this.get(`/api/v1/customers${queryString ? `?${queryString}` : ''}`);
-  }
-
-  public getCustomer(customerId: string): Promise<{
-    found: boolean;
-    customer: Customer;
-  }> {
-    return this.get(`/api/v1/customers/${customerId}`);
-  }
-
-  public getCustomerConversations(
-    customerId: string,
-    params?: {
-      limit?: number;
-      offset?: number;
-    },
-  ): Promise<{
-    customer_id: string;
-    conversations: CustomerConversation[];
-    total: number;
-    limit: number;
-    offset: number;
-  }> {
-    const queryParams = new URLSearchParams();
-    if (params?.limit !== undefined) {
-      queryParams.append('limit', params.limit.toString());
-    }
-    if (params?.offset !== undefined) {
-      queryParams.append('offset', params.offset.toString());
-    }
-
-    const queryString = queryParams.toString();
-    return this.get(
-      `/api/v1/customers/${customerId}/conversations${queryString ? `?${queryString}` : ''}`,
-    );
-  }
-
   // ============ File management API ============
   public uploadDocumentFile(file: File): Promise<{ file_id: string }> {
     const formData = new FormData();
@@ -1125,9 +1057,7 @@ export class BackendClient extends BaseHttpClient {
     }
 
     const queryString = queryParams.toString();
-    return this.get(
-      `/api/v1/customers${queryString ? `?${queryString}` : ''}`,
-    );
+    return this.get(`/api/v1/customers${queryString ? `?${queryString}` : ''}`);
   }
 
   public getCustomer(customerId: string): Promise<{

@@ -18,10 +18,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { httpClient } from '@/app/infra/http/HttpClient';
 import { useSidebarData } from '@/app/home/components/home-sidebar/SidebarDataContext';
-import {
-  Customer,
-  CustomerConversation,
-} from '@/app/infra/entities/api';
+import { Customer, CustomerConversation } from '@/app/infra/entities/api';
 
 function getRoleVariant(role: string) {
   return role === 'assistant' ? 'secondary' : 'default';
@@ -80,7 +77,9 @@ export default function CustomerDetailContent({ id }: { id: string }) {
   const { customers, setDetailEntityName } = useSidebarData();
 
   const [customer, setCustomer] = useState<Customer | null>(null);
-  const [conversations, setConversations] = useState<CustomerConversation[]>([]);
+  const [conversations, setConversations] = useState<CustomerConversation[]>(
+    [],
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -137,7 +136,10 @@ export default function CustomerDetailContent({ id }: { id: string }) {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-4 text-muted-foreground">
         <p>{t('customers.notFound')}</p>
-        <Button variant="outline" onClick={() => router.push('/home/customers')}>
+        <Button
+          variant="outline"
+          onClick={() => router.push('/home/customers')}
+        >
           <ArrowLeft className="mr-2 size-4" />
           {t('customers.backToList')}
         </Button>
@@ -158,13 +160,16 @@ export default function CustomerDetailContent({ id }: { id: string }) {
             </Badge>
           </div>
           <p className="text-sm text-muted-foreground">
-            {t('customers.lastContactAt')}: {' '}
+            {t('customers.lastContactAt')}:{' '}
             {customer.last_contact_at
               ? new Date(customer.last_contact_at).toLocaleString()
               : '-'}
           </p>
         </div>
-        <Button variant="outline" onClick={() => router.push('/home/customers')}>
+        <Button
+          variant="outline"
+          onClick={() => router.push('/home/customers')}
+        >
           <ArrowLeft className="mr-2 size-4" />
           {t('customers.backToList')}
         </Button>
@@ -174,35 +179,45 @@ export default function CustomerDetailContent({ id }: { id: string }) {
         <Card>
           <CardHeader>
             <CardTitle>{t('customers.profileTitle')}</CardTitle>
-            <CardDescription>{t('customers.profileDescription')}</CardDescription>
+            <CardDescription>
+              {t('customers.profileDescription')}
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-3 text-sm">
               <div className="flex items-start gap-3">
                 <User className="mt-0.5 size-4 text-muted-foreground" />
                 <div>
-                  <div className="text-muted-foreground">{t('customers.fields.name')}</div>
+                  <div className="text-muted-foreground">
+                    {t('customers.fields.name')}
+                  </div>
                   <div>{customer.customer_name || '-'}</div>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <Phone className="mt-0.5 size-4 text-muted-foreground" />
                 <div>
-                  <div className="text-muted-foreground">{t('customers.fields.phone')}</div>
+                  <div className="text-muted-foreground">
+                    {t('customers.fields.phone')}
+                  </div>
                   <div>{customer.phone || '-'}</div>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <Building2 className="mt-0.5 size-4 text-muted-foreground" />
                 <div>
-                  <div className="text-muted-foreground">{t('customers.fields.company')}</div>
+                  <div className="text-muted-foreground">
+                    {t('customers.fields.company')}
+                  </div>
                   <div>{customer.company || '-'}</div>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <MessageSquare className="mt-0.5 size-4 text-muted-foreground" />
                 <div>
-                  <div className="text-muted-foreground">{t('customers.fields.intent')}</div>
+                  <div className="text-muted-foreground">
+                    {t('customers.fields.intent')}
+                  </div>
                   <div>{customer.intent || '-'}</div>
                 </div>
               </div>
@@ -211,21 +226,27 @@ export default function CustomerDetailContent({ id }: { id: string }) {
             <Separator />
 
             <div className="space-y-2">
-              <div className="text-sm font-medium">{t('customers.fields.requirementSummary')}</div>
+              <div className="text-sm font-medium">
+                {t('customers.fields.requirementSummary')}
+              </div>
               <div className="rounded-md bg-muted p-3 text-sm">
                 {customer.requirement_summary || '-'}
               </div>
             </div>
 
             <div className="space-y-2">
-              <div className="text-sm font-medium">{t('customers.fields.notes')}</div>
+              <div className="text-sm font-medium">
+                {t('customers.fields.notes')}
+              </div>
               <div className="rounded-md bg-muted p-3 text-sm">
                 {customer.notes || '-'}
               </div>
             </div>
 
             <div className="space-y-2">
-              <div className="text-sm font-medium">{t('customers.fields.tags')}</div>
+              <div className="text-sm font-medium">
+                {t('customers.fields.tags')}
+              </div>
               <div className="flex flex-wrap gap-2">
                 {tags.length > 0 ? (
                   tags.map((tag) => (
@@ -243,19 +264,27 @@ export default function CustomerDetailContent({ id }: { id: string }) {
 
             <div className="grid gap-3 text-sm sm:grid-cols-2">
               <div>
-                <div className="text-muted-foreground">{t('customers.fields.bot')}</div>
+                <div className="text-muted-foreground">
+                  {t('customers.fields.bot')}
+                </div>
                 <div>{customer.bot_name || '-'}</div>
               </div>
               <div>
-                <div className="text-muted-foreground">{t('customers.fields.pipeline')}</div>
+                <div className="text-muted-foreground">
+                  {t('customers.fields.pipeline')}
+                </div>
                 <div>{customer.pipeline_name || '-'}</div>
               </div>
               <div>
-                <div className="text-muted-foreground">{t('customers.fields.conversationCount')}</div>
+                <div className="text-muted-foreground">
+                  {t('customers.fields.conversationCount')}
+                </div>
                 <div>{customer.conversation_count ?? 0}</div>
               </div>
               <div>
-                <div className="text-muted-foreground">{t('customers.fields.user')}</div>
+                <div className="text-muted-foreground">
+                  {t('customers.fields.user')}
+                </div>
                 <div>{customer.user_name || customer.user_id || '-'}</div>
               </div>
             </div>
@@ -265,7 +294,9 @@ export default function CustomerDetailContent({ id }: { id: string }) {
         <Card>
           <CardHeader>
             <CardTitle>{t('customers.timelineTitle')}</CardTitle>
-            <CardDescription>{t('customers.timelineDescription')}</CardDescription>
+            <CardDescription>
+              {t('customers.timelineDescription')}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             {conversations.length === 0 ? (

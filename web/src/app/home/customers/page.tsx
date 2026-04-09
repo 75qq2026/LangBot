@@ -150,7 +150,9 @@ export default function CustomersPage() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-xl font-semibold">{t('customers.title')}</h1>
-          <p className="text-sm text-muted-foreground">{t('customers.description')}</p>
+          <p className="text-sm text-muted-foreground">
+            {t('customers.description')}
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" onClick={handleRefresh} disabled={loading}>
@@ -200,13 +202,19 @@ export default function CustomersPage() {
               <TableBody>
                 {loading ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
+                    <TableCell
+                      colSpan={6}
+                      className="h-24 text-center text-muted-foreground"
+                    >
                       {t('common.loading')}
                     </TableCell>
                   </TableRow>
                 ) : customers.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
+                    <TableCell
+                      colSpan={6}
+                      className="h-24 text-center text-muted-foreground"
+                    >
                       {t('customers.emptyList')}
                     </TableCell>
                   </TableRow>
@@ -216,11 +224,15 @@ export default function CustomersPage() {
                       key={customer.id}
                       className="cursor-pointer"
                       onClick={() =>
-                        router.push(`/home/customers?id=${encodeURIComponent(customer.id)}`)
+                        router.push(
+                          `/home/customers?id=${encodeURIComponent(customer.id)}`,
+                        )
                       }
                     >
                       <TableCell className="font-medium">
-                        {customer.customer_name || customer.user_name || customer.user_id}
+                        {customer.customer_name ||
+                          customer.user_name ||
+                          customer.user_id}
                       </TableCell>
                       <TableCell>{customer.phone || '-'}</TableCell>
                       <TableCell>{customer.company || '-'}</TableCell>
@@ -228,7 +240,9 @@ export default function CustomersPage() {
                         {customer.intent || customer.requirement_summary || '-'}
                       </TableCell>
                       <TableCell>
-                        <Badge variant={getStatusVariant(customer.profile_status)}>
+                        <Badge
+                          variant={getStatusVariant(customer.profile_status)}
+                        >
                           {t(`customers.status.${customer.profile_status}`)}
                         </Badge>
                       </TableCell>
