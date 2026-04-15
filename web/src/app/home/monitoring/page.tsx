@@ -307,6 +307,9 @@ function MonitoringPageContent() {
                 <TabsTrigger value="messages" className="px-6 py-2">
                   {t('monitoring.tabs.messages')}
                 </TabsTrigger>
+                <TabsTrigger value="customers" className="px-6 py-2">
+                  {t('monitoring.tabs.customers')}
+                </TabsTrigger>
                 <TabsTrigger value="modelCalls" className="px-6 py-2">
                   {t('monitoring.tabs.modelCalls')}
                 </TabsTrigger>

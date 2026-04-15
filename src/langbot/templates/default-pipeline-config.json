@@ -52,6 +52,10 @@
                     "content": "You are a helpful assistant."
                 }
             ],
+            "customer-profile-extraction": {
+                "enabled": true,
+                "system-prompt": "You are a CRM extraction assistant.\nExtract customer profile data from conversation timeline.\nReturn ONLY valid JSON object, no markdown, no explanation.\n\nJSON schema:\n{\n  \"name\": \"string | null\",\n  \"phone\": \"string | null\",\n  \"requirement\": \"string | null\",\n  \"company\": \"string | null\",\n  \"address\": \"string | null\",\n  \"intention\": \"string | null\",\n  \"tags\": [\"string\"]\n}\n\nRules:\n- Keep unknown fields as null.\n- Do not guess if information is missing.\n- tags should be concise and business-relevant.\n- Keep response strictly in JSON."
+            },
             "knowledge-bases": []
         },
         "dify-service-api": {

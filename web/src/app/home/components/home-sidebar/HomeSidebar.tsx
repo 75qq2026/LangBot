@@ -119,6 +119,7 @@ const ENTITY_CATEGORY_IDS = [
   'bots',
   'pipelines',
   'knowledge',
+  'customers',
   'plugins',
   'mcp',
 ] as const;
@@ -129,6 +130,7 @@ const DETAIL_PAGE_CATEGORIES: EntityCategoryId[] = [
   'bots',
   'pipelines',
   'knowledge',
+  'customers',
   'plugins',
   'mcp',
 ];
@@ -139,7 +141,6 @@ const CREATABLE_CATEGORIES: EntityCategoryId[] = [
   'pipelines',
   'knowledge',
   'mcp',
-  'plugins',
 ];
 
 // Categories where clicking the parent only toggles collapse (no list page)
@@ -147,6 +148,7 @@ const COLLAPSIBLE_ONLY_CATEGORIES: EntityCategoryId[] = [
   'bots',
   'pipelines',
   'knowledge',
+  'customers',
   'mcp',
 ];
 
@@ -157,11 +159,12 @@ function isEntityCategory(id: string): id is EntityCategoryId {
 // Map sidebar config IDs to SidebarDataContext keys
 const ENTITY_KEY_MAP: Record<
   EntityCategoryId,
-  'bots' | 'pipelines' | 'knowledgeBases' | 'plugins' | 'mcpServers'
+  'bots' | 'pipelines' | 'knowledgeBases' | 'customers' | 'plugins' | 'mcpServers'
 > = {
   bots: 'bots',
   pipelines: 'pipelines',
   knowledge: 'knowledgeBases',
+  customers: 'customers',
   plugins: 'plugins',
   mcp: 'mcpServers',
 };
@@ -171,6 +174,7 @@ const ENTITY_ROUTE_MAP: Record<EntityCategoryId, string> = {
   bots: '/home/bots',
   pipelines: '/home/pipelines',
   knowledge: '/home/knowledge',
+  customers: '/home/customers',
   plugins: '/home/plugins',
   mcp: '/home/mcp',
 };

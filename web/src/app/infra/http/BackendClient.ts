@@ -1024,6 +1024,122 @@ export class BackendClient extends BaseHttpClient {
     return this.get(`/api/v1/monitoring/overview?${queryParams.toString()}`);
   }
 
+  // ============ Customer API ============
+  public getCustomers(params?: {
+    search?: string;
+    botId?: string[];
+    pipelineId?: string[];
+    limit?: number;
+    offset?: number;
+  }): Promise<{
+    customers: Array<{
+      id: string;
+      session_id: string;
+      bot_id: string;
+      bot_name: string;
+      pipeline_id: string;
+      pipeline_name: string;
+      sender_name: string | null;
+      customer_name: string | null;
+      phone: string | null;
+      requirement: string | null;
+      company: string | null;
+      address: string | null;
+      intention: string | null;
+      tags: string | null;
+      structured_profile: string | null;
+      created_at: string;
+      updated_at: string;
+      last_conversation_at: string;
+      conversation_count: number;
+    }>;
+    total: number;
+    limit: number;
+    offset: number;
+  }> {
+    const queryParams = new URLSearchParams();
+    if (params?.search) {
+      queryParams.append('search', params.search);
+    }
+    if (params?.botId) {
+      params.botId.forEach((id) => queryParams.append('botId', id));
+    }
+    if (params?.pipelineId) {
+      params.pipelineId.forEach((id) => queryParams.append('pipelineId', id));
+    }
+    if (params?.limit !== undefined) {
+      queryParams.append('limit', params.limit.toString());
+    }
+    if (params?.offset !== undefined) {
+      queryParams.append('offset', params.offset.toString());
+    }
+    const qs = queryParams.toString();
+    return this.get(`/api/v1/customers${qs ? `?${qs}` : ''}`);
+  }
+
+  public getCustomer(customerId: string): Promise<{
+    customer: {
+      id: string;
+      session_id: string;
+      bot_id: string;
+      bot_name: string;
+      pipeline_id: string;
+      pipeline_name: string;
+      sender_name: string | null;
+      customer_name: string | null;
+      phone: string | null;
+      requirement: string | null;
+      company: string | null;
+      address: string | null;
+      intention: string | null;
+      tags: string | null;
+      structured_profile: string | null;
+      created_at: string;
+      updated_at: string;
+      last_conversation_at: string;
+      conversation_count: number;
+    };
+  }> {
+    return this.get(`/api/v1/customers/${customerId}`);
+  }
+
+  public getCustomerConversations(
+    customerId: string,
+    params?: { limit?: number; offset?: number },
+  ): Promise<{
+    conversations: Array<{
+      id: string;
+      customer_id: string;
+      session_id: string;
+      message_id: string | null;
+      role: string;
+      message_content: string;
+      message_text: string | null;
+      timestamp: string;
+      bot_id: string;
+      bot_name: string;
+      pipeline_id: string;
+      pipeline_name: string;
+      sender_name: string | null;
+      metadata_json: string | null;
+    }>;
+    total: number;
+    limit: number;
+    offset: number;
+  }> {
+    const queryParams = new URLSearchParams();
+    if (params?.limit !== undefined) {
+      queryParams.append('limit', params.limit.toString());
+    }
+    if (params?.offset !== undefined) {
+      queryParams.append('offset', params.offset.toString());
+    }
+    const qs = queryParams.toString();
+    return this.get(
+      `/api/v1/customers/${customerId}/conversations${qs ? `?${qs}` : ''}`,
+    );
+  }
+
   // ============ Survey API ============
   public getSurveyPending(): Promise<{
     survey: {

@@ -104,6 +104,40 @@ stages:
           field: __system.is_wizard
           operator: neq
           value: true
+      - name: customer-profile-extraction
+        label:
+          en_US: Customer Profile Extraction
+          zh_Hans: 客户资料提取
+        description:
+          en_US: Extract structured customer profile from conversations and save to CRM.
+          zh_Hans: 从对话中提取结构化客户信息并保存到客户管理模块
+        type: object
+        required: false
+        default:
+          enabled: true
+          system-prompt: ""
+        show_if:
+          field: __system.is_wizard
+          operator: neq
+          value: true
+        children:
+          - name: enabled
+            label:
+              en_US: Enable Extraction
+              zh_Hans: 启用提取
+            type: boolean
+            required: true
+            default: true
+          - name: system-prompt
+            label:
+              en_US: Extraction System Prompt
+              zh_Hans: 提取系统提示词
+            description:
+              en_US: Optional custom extraction prompt. Leave empty to use built-in default.
+              zh_Hans: 可选自定义提取提示词，留空则使用内置默认提示词
+            type: string
+            required: false
+            default: ""
   - name: dify-service-api
     label:
       en_US: Dify Service API

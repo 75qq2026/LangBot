@@ -31,6 +31,7 @@ from ..api.http.service import mcp as mcp_service
 from ..api.http.service import apikey as apikey_service
 from ..api.http.service import webhook as webhook_service
 from ..api.http.service import monitoring as monitoring_service
+from ..api.http.service import customer as customer_service
 
 from ..discover import engine as discover_engine
 from ..storage import mgr as storagemgr
@@ -152,6 +153,7 @@ class Application:
     survey: survey_module.SurveyManager = None
 
     monitoring_service: monitoring_service.MonitoringService = None
+    customer_service: customer_service.CustomerService = None
 
     def __init__(self):
         pass
