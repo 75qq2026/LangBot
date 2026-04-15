@@ -37,11 +37,13 @@ export type PluginInstallAction = 'local' | 'github' | null;
 export interface SidebarDataContextValue {
   bots: SidebarEntityItem[];
   pipelines: SidebarEntityItem[];
+  customers: SidebarEntityItem[];
   knowledgeBases: SidebarEntityItem[];
   plugins: SidebarEntityItem[];
   mcpServers: SidebarEntityItem[];
   refreshBots: () => Promise<void>;
   refreshPipelines: () => Promise<void>;
+  refreshCustomers: () => Promise<void>;
   refreshKnowledgeBases: () => Promise<void>;
   refreshPlugins: () => Promise<void>;
   refreshMCPServers: () => Promise<void>;
@@ -63,6 +65,7 @@ export function SidebarDataProvider({
 }) {
   const [bots, setBots] = useState<SidebarEntityItem[]>([]);
   const [pipelines, setPipelines] = useState<SidebarEntityItem[]>([]);
+  const [customers, setCustomers] = useState<SidebarEntityItem[]>([]);
   const [knowledgeBases, setKnowledgeBases] = useState<SidebarEntityItem[]>([]);
   const [plugins, setPlugins] = useState<SidebarEntityItem[]>([]);
   const [mcpServers, setMCPServers] = useState<SidebarEntityItem[]>([]);
@@ -119,6 +122,22 @@ export function SidebarDataProvider({
       );
     } catch (error) {
       console.error('Failed to fetch knowledge bases for sidebar:', error);
+    }
+  }, []);
+
+  const refreshCustomers = useCallback(async () => {
+    try {
+      const resp = await httpClient.getCustomers({ limit: 100, offset: 0 });
+      setCustomers(
+        resp.customers.map((customer) => ({
+          id: customer.id,
+          name: customer.customer_name || customer.sender_name || customer.session_id,
+          description: customer.requirement || customer.phone || '',
+          updatedAt: customer.updated_at,
+        })),
+      );
+    } catch (error) {
+      console.error('Failed to fetch customers for sidebar:', error);
     }
   }, []);
 
@@ -191,6 +210,7 @@ export function SidebarDataProvider({
     await Promise.all([
       refreshBots(),
       refreshPipelines(),
+      refreshCustomers(),
       refreshKnowledgeBases(),
       refreshPlugins(),
       refreshMCPServers(),
@@ -198,6 +218,7 @@ export function SidebarDataProvider({
   }, [
     refreshBots,
     refreshPipelines,
+    refreshCustomers,
     refreshKnowledgeBases,
     refreshPlugins,
     refreshMCPServers,
@@ -213,11 +234,13 @@ export function SidebarDataProvider({
       value={{
         bots,
         pipelines,
+        customers,
         knowledgeBases,
         plugins,
         mcpServers,
         refreshBots,
         refreshPipelines,
+        refreshCustomers,
         refreshKnowledgeBases,
         refreshPlugins,
         refreshMCPServers,
