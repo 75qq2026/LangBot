@@ -1,0 +1,87 @@
+apiVersion: v1
+kind: MessagePlatformAdapter
+metadata:
+  name: dow-relay
+  label:
+    en_US: "Dify-on-WeChat (WeCom) HTTP Bridge"
+    zh_Hans: "Dify-on-WeChat 企业微信 HTTP 中转"
+  description:
+    en_US: "Outbound HTTP to a Windows bridge; inbound via /api/v1/dow-relay/.../ingest"
+    zh_Hans: "出站 HTTP 转发到 Windows 桥接进程；入站通过 dow-relay ingest API"
+  icon: ""
+spec:
+  categories:
+    - protocol
+  config:
+    - name: bridge_base_url
+      type: string
+      required: true
+      label:
+        zh_Hans: "桥接服务 Base URL"
+        en_US: "Bridge base URL"
+      description:
+        zh_Hans: "Windows 桥进程地址，例如 http://192.168.1.10:9123"
+        en_US: "Windows bridge base URL, e.g. http://192.168.1.10:9123"
+    - name: send_path
+      type: string
+      required: false
+      default: "/send"
+      label:
+        zh_Hans: "发送路径"
+        en_US: "Send path"
+    - name: bridge_secret
+      type: string
+      required: false
+      label:
+        zh_Hans: "桥接共享密钥（可选）"
+        en_US: "Bridge shared secret (optional)"
+    - name: ingest_secret
+      type: string
+      required: true
+      label:
+        zh_Hans: "入站密钥（请求头 X-DOW-Relay-Secret）"
+        en_US: "Ingest secret (header X-DOW-Relay-Secret)"
+    - name: upstream_secret
+      type: string
+      required: false
+      label:
+        zh_Hans: "上游请求密钥（可选，X-Bridge-Secret）"
+        en_US: "Upstream secret (optional, X-Bridge-Secret)"
+    - name: upstream_base_url
+      type: string
+      required: false
+      label:
+        zh_Hans: "上游 API（群列表/成员，可选）"
+        en_US: "Upstream API for groups/members (optional)"
+    - name: groups_path
+      type: string
+      required: false
+      default: "/groups"
+      label:
+        zh_Hans: "群列表路径"
+        en_US: "Groups list path"
+    - name: members_path_template
+      type: string
+      required: false
+      default: "/groups/{group_id}/members"
+      label:
+        zh_Hans: "群成员路径模板（{group_id}）"
+        en_US: "Members path template ({group_id})"
+    - name: stream_to_bridge
+      type: boolean
+      required: false
+      default: true
+      label:
+        zh_Hans: "流式片段转发到桥"
+        en_US: "Stream chunks to bridge"
+    - name: http_timeout_seconds
+      type: number
+      required: false
+      default: 60
+      label:
+        zh_Hans: "HTTP 超时（秒）"
+        en_US: "HTTP timeout (seconds)"
+execution:
+  python:
+    path: "dow_relay_adapter.py"
+    attr: "DowRelayAdapter"

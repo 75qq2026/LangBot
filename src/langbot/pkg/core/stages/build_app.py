@@ -29,6 +29,7 @@ from ...api.http.service import apikey as apikey_service
 from ...api.http.service import webhook as webhook_service
 from ...api.http.service import monitoring as monitoring_service
 from ...api.http.service import customer as customer_service
+from ...api.http.service import dow_relay as dow_relay_service
 from ...discover import engine as discover_engine
 from ...storage import mgr as storagemgr
 from ...utils import logcache
@@ -167,6 +168,9 @@ class BuildAppStage(stage.BootingStage):
 
         customer_service_inst = customer_service.CustomerService(ap)
         ap.customer_service = customer_service_inst
+
+        dow_relay_service_inst = dow_relay_service.DowRelayService(ap)
+        ap.dow_relay_service = dow_relay_service_inst
 
         async def runtime_disconnect_callback(connector: plugin_connector.PluginRuntimeConnector) -> None:
             await asyncio.sleep(3)

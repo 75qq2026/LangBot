@@ -32,6 +32,7 @@ from ..api.http.service import apikey as apikey_service
 from ..api.http.service import webhook as webhook_service
 from ..api.http.service import monitoring as monitoring_service
 from ..api.http.service import customer as customer_service
+from ..api.http.service import dow_relay as dow_relay_service
 
 from ..discover import engine as discover_engine
 from ..storage import mgr as storagemgr
@@ -154,6 +155,8 @@ class Application:
 
     monitoring_service: monitoring_service.MonitoringService = None
     customer_service: customer_service.CustomerService = None
+
+    dow_relay_service: dow_relay_service.DowRelayService = None
 
     def __init__(self):
         pass
